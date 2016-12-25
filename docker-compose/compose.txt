@@ -1,0 +1,24 @@
+web:
+	image: dockerfile_nginx:latest
+	ports:
+	  - "80:80"
+	links:
+	  - redmine-ap:redmine
+redmine-db:
+	image: sameersbn/postgresql:9.5-3
+	environment:
+	 - DB_NAME=redmine_production
+	 - DB_USER=redmine
+	 - DB_PASS=password
+	volumes:
+	 - /srv/docker/redmine/postgresql:/var/lib/postgresql
+redmine-ap:
+	image: sameersbn/redmine:3.3.1
+	ports:
+	 - "10083:80"
+	environment:
+	 - REDMINE_PORT=10083
+	volumes:
+	 - /srv/docker/redmine/redmine:/home/redmine/data
+	links:
+	 - redmine-db:postgresql
